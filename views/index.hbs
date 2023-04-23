@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Food Items</title>
+    <style>
+      body {
+        background-color: #f1f1f1;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+      .card {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px;
+        display: inline-block;
+        margin: 10px;
+}
+      .card-image {
+        width: 100%;
+        height: 70%;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      .card-content {
+        font-size: 10px;
+        margin: 0;
+      }
+      .card-title {
+        font-size: 12px;
+        margin: 5px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        }
+
+      .card-nutrients {
+        margin-bottom: 10px;
+      }
+      .card-nutrient {
+        display: inline-block;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+      .card-nutrient-label {
+  font-weight: bold;
+  font-size: 10px;
+}
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+    </style>
+  </head>
+  <body>
+
+    <h1>Search</h1>
+  <form method="GET" action="/">
+  <input type="text" name="query" placeholder="Search...">
+  <button type="submit">Search</button>
+</form>
+
+
+    <div class="container">
+      {{#each foodItems}}
+      <div class="card">
+        <img class="card-image" src="{{image}}" alt="{{title}}">
+        <div class="card-content">
+          <h2 class="card-title">{{title}}</h2>
+          <div class="card-nutrients">
+            {{#each nutrients}}
+            <span class="card-nutrient">
+              <span class="card-nutrient-label">{{name}}:</span>
+              {{amount}}{{unit}}
+            </span>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    <script>
+        // Get all the food cards
+const foodCards = document.querySelectorAll('.card');
+
+// Define the favorites array
+let favorites = [];
+
+// Attach an event listener to each food card
+foodCards.forEach(card => {
+  const addToFavoritesButton = card.querySelector('.add-to-favorites');
+  addToFavoritesButton.addEventListener('click', () => {
+    // Get the food item data from the card
+    const title = card.querySelector('.card-title').textContent;
+    const image = card.querySelector('.card-image').src;
+    const nutrients = [];
+    const nutrientElements = card.querySelectorAll('.card-nutrient');
+    nutrientElements.forEach(element => {
+      const name = element.querySelector('.card-nutrient-label').textContent;
+      const amount = element.textContent.replace(name, '').trim();
+      const unit = name.includes('calories') ? 'calories' : 'g';
+      nutrients.push({ name, amount, unit });
+    });
+
+    // Create a new food item object
+    const foodItem = { title, image, nutrients };
+
+    // Add the food item to the favorites array
+    favorites.push(foodItem);
+    console.log(favorites)
+  });
+});
+
+    </script>
+
+  </body>
+</html>
